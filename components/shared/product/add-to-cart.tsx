@@ -22,7 +22,7 @@ const AddToCart = ({ item }: { item: CartItem }) => {
       return;
     }
 
-    toast.success(`${item.name} added to cart`, {
+    toast.success(res.message, {
       // Changed to use toast.success (dot notation)
 
       action: {
@@ -38,5 +38,6 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     </Button>
   );
 };
+
 
 export default AddToCart;
