@@ -22,7 +22,7 @@ const CheckoutSteps = ({ current = 0 }) => {
         )
       )}
     </div>
-  );
+  )
 };
 
 export default CheckoutSteps;
