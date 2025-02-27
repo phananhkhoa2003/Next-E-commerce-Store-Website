@@ -71,6 +71,7 @@ export const config = {
     async jwt({ token, user, trigger, session }: any) {
       // assign user fields to the token
       if (user) {
+        token.id = user.id;
         token.role = user.role;
 
         //if user has no name then use the email
@@ -87,10 +88,56 @@ export const config = {
             },
           });
         }
+
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get("sessionCartId")?.value;
+
+          if (!sessionCartId) return;
+
+          const sessionCart = await prisma.cart.findFirst({
+            where: { sessionCartId },
+          });
+
+          if (!sessionCart) return;
+
+          if (sessionCart.userId !== user.id) {
+            // Delete current user cart
+            await prisma.cart.deleteMany({
+              where: { userId: user.id },
+            });
+
+            // Assign new cart
+            await prisma.cart.update({
+              where: { id: sessionCart.id },
+              data: { userId: user.id },
+            });
+          }
+        }
+      }
+      //handle session updates
+      if (session?.user.name && trigger === "update") {
+        token.name = session.user.name;
       }
       return token;
     },
     authorized({ request, auth }: any) {
+      // Array of regex patterns of paths we want to protect
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+      //get pathname from the req url object
+      const { pathname } = request.nextUrl;
+      //check if user is not authenticated and accessing a protected path
+      if (!auth && protectedPaths.some((path) => path.test(pathname))) {
+        return false;
+      }
       // check for session cart cookie
       if (!request.cookies.has("sessionCartId")) {
         // generate new session cart id cookie
