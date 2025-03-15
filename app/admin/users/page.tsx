@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getAllUsers,deleteUser } from "@/lib/actions/user.actions";
+import { getAllUsers, deleteUser } from "@/lib/actions/user.actions";
 import {
   Table,
   TableBody,
@@ -20,14 +20,24 @@ export const metadata: Metadata = {
 };
 
 const AdminUsersPage = async (props: {
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<{ page: string; query: string }>;
 }) => {
-  const { page = "1" } = await props.searchParams;
-  const users = await getAllUsers({ page: Number(page) });
+  const { page = "1" , query:searchText} = await props.searchParams;
+  const users = await getAllUsers({ page: Number(page), query: searchText });
 
   return (
     <div className="space-y-2">
-      <h2 className="h2-bold">Users</h2>
+      <div className="flex items-center gap-3">
+          <h1 className="h2-bold">Users</h1>
+            {searchText && (
+              <div>
+                Filtered by <i>&quot;{searchText}&quot;</i>{'  '}
+                <Link href={`/admin/users`}>
+                  <Button variant='outline' size='sm'>Remove Filter</Button>
+                </Link>
+              </div>
+            )}
+        </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
@@ -56,7 +66,7 @@ const AdminUsersPage = async (props: {
                   <Button asChild variant="outline" size="sm">
                     <Link href={`/admin/users/${user.id}`}>Edit</Link>
                   </Button>
-                  <DeleteDialog id={user.id} action={deleteUser}/>
+                  <DeleteDialog id={user.id} action={deleteUser} />
                 </TableCell>
               </TableRow>
             ))}
