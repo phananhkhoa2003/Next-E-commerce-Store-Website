@@ -26,7 +26,7 @@ export const insertProductSchema = z.object({
 //schema for update product
 export const updateProductSchema = insertProductSchema.extend({
   id: z.string().min(1, " ID is required"),
-})
+});
 // schema for sign in user
 export const signInFormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -89,8 +89,7 @@ export const paymentMethodSchema = z
     message: "Invalid payment method",
   });
 
-
-  // schema for insert order
+// schema for insert order
 
 export const insertOrderSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -98,11 +97,11 @@ export const insertOrderSchema = z.object({
   shippingPrice: currency,
   taxPrice: currency,
   totalPrice: currency,
-  paymentMethod : z.string().refine((data) => PAYMENT_METHODS.includes(data), {
+  paymentMethod: z.string().refine((data) => PAYMENT_METHODS.includes(data), {
     message: "Invalid payment method",
   }),
   shippingAddress: shippingAddressSchema,
-})
+});
 
 // schema for insert order item
 
@@ -120,11 +119,22 @@ export const paymentResultSchema = z.object({
   status: z.string(),
   email_address: z.string(),
   pricePaid: z.string(),
-})
+});
 
 //Schema for update the user profile
 
 export const updateProfileSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
-  email: z.string().email("Invalid email address").min(3, "Email must be at least 3 characters"),
-})
+  email: z
+    .string()
+    .email("Invalid email address")
+    .min(3, "Email must be at least 3 characters"),
+});
+
+//schema for update users
+export const updateUserSchema = updateProfileSchema.extend({
+  id: z.string().min(1, " ID is required"),
+  role: z.string().min(1, " Role is required"),
+});
+
+
