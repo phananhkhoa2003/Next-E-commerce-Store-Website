@@ -1,17 +1,23 @@
-import { getLatestProducts } from "@/lib/actions/product.actions";
+import {
+  getLatestProducts,
+  getFeaturedProducts,
+} from "@/lib/actions/product.actions";
 import ProductList from "@/components/shared/product/product-list";
 import { Product } from "@/types";
-import {auth} from "@/auth"
+import ProductCarousel from "@/components/shared/product/product-carousel";
+import ViewAllProductsButton from "@/components/view-all-products-button";
 
 const Homepage = async () => {
-  const session = await auth();
-  console.log("Auth session:", session);
+  const latestProducts = (await getLatestProducts()) as Product[];
+  const featuredProducts = (await getFeaturedProducts()) as Product[];
 
-  const latestProducts = await getLatestProducts() as Product[];
-  
   return (
     <>
-      <ProductList data={latestProducts} title="Newest Arrivals" limit={4}/>
+      {featuredProducts.length > 0 && (
+        <ProductCarousel data={featuredProducts}  />
+      )}
+      <ProductList data={latestProducts} title="Newest Arrivals" limit={4} />
+      <ViewAllProductsButton/>
     </>
   );
 };
