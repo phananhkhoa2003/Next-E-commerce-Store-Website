@@ -92,11 +92,13 @@ const DealCountdown = () => {
       <div className="flex flex-col gap-2 justify-center">
         <h3 className="text-3xl font-bold">Deal Of The Month</h3>
         <p>
-          Get exclusive discounts on our featured products for a limited time
-          only! Our Deal of the Month offers exceptional value on premium items.
-          Don't miss out - check back regularly for new exciting deals and save
-          big on your favorite products. Don&apos;t wait, shop now and enjoy the
-          savings!
+          <p>
+            Get exclusive discounts on our featured products for a limited time
+            only! Our Deal of the Month offers exceptional value on premium
+            items. Don&apos;t miss out - check back regularly for new exciting
+            deals and save big on your favorite products. Don&apos;t wait, shop
+            now and enjoy the savings!
+          </p>
         </p>
         <ul className="grid grid-cols-4">
           <StatBox label="Days" value={time.days} />
