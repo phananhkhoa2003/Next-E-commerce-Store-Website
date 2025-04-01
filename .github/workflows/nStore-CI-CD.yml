@@ -2,44 +2,22 @@ name: Vercel Production Deployment
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Nếu bạn có private packages
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set npm registry (nếu cần)
+      - uses: actions/checkout@v2
+      - name: Reset npm registry
         run: npm config set registry https://registry.npmjs.org/
-
-      - name: Update npm
-        run: npm install npm@latest
-
-      - name: Clear npm cache
-        run: npm cache clean --force
-
-      - name: Install dependencies
-        run: npm install --no-fund --no-audit
-
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
-
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
       - name: Deploy Project Artifacts to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Server
-        run : npm run build
