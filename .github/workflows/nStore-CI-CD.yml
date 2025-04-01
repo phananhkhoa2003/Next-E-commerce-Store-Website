@@ -34,23 +34,7 @@ jobs:
         run: npm install
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          NEXTAUTH_URL_INTERNAL: ${{ secrets.NEXTAUTH_URL_INTERNAL }}
-          PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID }}
-          PAYPAL_API_URL: ${{ secrets.PAYPAL_API_URL }}
-          PAYPAL_APP_SECRET: ${{ secrets.PAYPAL_APP_SECRET }}
-          UPLOADTHING_TOKEN: ${{ secrets.UPLOADTHING_TOKEN }}
-          UPLOADTHING_SECRET: ${{ secrets.UPLOADTHING_SECRET }}
-          UPLOADTHING_APPID: ${{ secrets.UPLOADTHING_APPID }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
+      - name: Build    
         run: npm run build
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
